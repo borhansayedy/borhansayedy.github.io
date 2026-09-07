@@ -1,0 +1,319 @@
+/* ---------- Design tokens ---------- */
+:root {
+  --bg: #FAF7F2;
+  --bg-alt: #F1EAE0;
+  --ink: #2B2A28;
+  --ink-soft: #5B564C;
+  --accent: #3F5D4F;
+  --accent-warm: #C98A4B;
+  --line: #DDD3C4;
+  --max: 700px;
+}
+
+* { box-sizing: border-box; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+h1, h2, h3 {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.2;
+  margin: 0 0 0.5em;
+}
+
+h1 { font-size: 2.4rem; font-weight: 480; }
+h2 { font-size: 1.5rem; margin-top: 2.4em; }
+h3 { font-size: 1.15rem; margin-top: 1.6em; }
+
+p { margin: 0 0 1.1em; }
+
+a {
+  color: var(--accent);
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+a:hover { text-decoration-color: var(--accent); }
+
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+ul { padding-left: 1.2em; }
+li { margin-bottom: 0.5em; }
+
+/* ---------- Layout shell ---------- */
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+header.site {
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.nav-row {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+nav.links {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+}
+
+nav.links a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+nav.links a[aria-current="page"] {
+  color: var(--accent);
+  border-bottom: 1px solid var(--accent);
+  padding-bottom: 2px;
+}
+
+nav.links a:hover { color: var(--accent); }
+
+main { padding: 56px 0 80px; }
+
+footer.site {
+  border-top: 1px solid var(--line);
+  padding: 28px 0 40px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.hero img {
+  width: 132px;
+  height: 132px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+}
+
+.hero .kicker {
+  color: var(--accent-warm);
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+}
+
+.hero h1 { margin-bottom: 2px; }
+
+.hero .role {
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  margin-bottom: 0;
+}
+
+@media (max-width: 560px) {
+  .hero { flex-direction: column; }
+  .hero img { width: 104px; height: 104px; }
+}
+
+/* ---------- Contact row ---------- */
+.contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin: 28px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 0.95rem;
+}
+
+.contact-row a { color: var(--ink); }
+
+/* ---------- Timeline (Education page) ---------- */
+.timeline {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 1.5em;
+  border-left: 2px solid var(--line);
+}
+
+.timeline li {
+  position: relative;
+  padding: 2px 0 28px 28px;
+}
+
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+}
+
+.timeline .year {
+  color: var(--accent-warm);
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.timeline .degree {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.timeline .school {
+  color: var(--ink-soft);
+}
+
+/* ---------- Research groups ---------- */
+.pub-list { list-style: none; padding-left: 0; }
+.pub-list li {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.pub-list li:first-child { padding-top: 0; }
+.pub-tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 1px 7px;
+  margin-bottom: 6px;
+}
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 0; }
+.tag-row span {
+  background: var(--bg-alt);
+  border-radius: 5px;
+  padding: 5px 12px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Course cards (Teaching page) ---------- */
+.course {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+.course:first-child { padding-top: 0; }
+.course h3 { margin: 0 0 4px; }
+
+/* ---------- Callout / student feedback ---------- */
+.callout {
+  background: var(--bg-alt);
+  border-radius: 8px;
+  padding: 22px 24px;
+  margin: 32px 0;
+}
+.callout p:last-child { margin-bottom: 0; }
+
+/* ---------- Financial tools ---------- */
+.tool-card {
+  background: var(--bg-alt);
+  border-radius: 8px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.tool-card h3 { margin-top: 0; }
+
+.field-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 16px 0;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 150px;
+}
+.field label { font-size: 0.88rem; color: var(--ink-soft); }
+.field input {
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  background: var(--bg);
+  color: var(--ink);
+}
+.field input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+button.calc-btn {
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 0.98rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+button.calc-btn:hover { opacity: 0.9; }
+
+.result {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 1.05rem;
+  display: none;
+}
+.result.show { display: block; }
+.result .big { font-family: "Fraunces", Georgia, serif; font-size: 1.7rem; color: var(--accent); }
+
+.coming-soon {
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  padding: 20px 24px;
+  color: var(--ink-soft);
+}
+
+/* ---------- Mobile nav toggle ---------- */
+.nav-toggle { display: none; }
+
+@media (max-width: 640px) {
+  .nav-row { flex-wrap: wrap; }
+  nav.links { gap: 14px 18px; font-size: 0.92rem; }
+}
