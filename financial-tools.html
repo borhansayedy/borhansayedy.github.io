@@ -20,6 +20,7 @@
       <a href="research.html">Research</a>
       <a href="teaching.html">Teaching</a>
       <a href="financial-tools.html" aria-current="page">Financial Tools</a>
+      <a href="financial-freedom.html">Financial Freedom Planning</a>
     </nav>
   </div>
 </header>
@@ -27,9 +28,7 @@
 <main>
   <div class="wrap">
     <h1>Financial Tools</h1>
-    <p>A few simple calculators for the concepts I teach in class &mdash; useful for students, and for anyone thinking through their own numbers.</p>
-
-    <p class="ffp-subhead">Quick Calculators</p>
+    <p>A handful of everyday calculators, useful for students and for anyone thinking through their own numbers. Looking for the retirement and savings-goal tools instead? Those live on the <a href="financial-freedom.html">Financial Freedom Planning</a> page.</p>
 
     <div class="tool-card">
       <h3>Compound Interest Calculator</h3>
@@ -85,161 +84,69 @@
       </div>
     </div>
 
-    <h2 class="ffp-intro">Financial Freedom Planning</h2>
-    <p>The goal of these tools is simple: the earlier you start saving and investing, the more compound interest does the work for you. Try plugging in your own numbers &mdash; the gap between starting today and starting in ten years is usually the most convincing argument there is.</p>
-
-    <p class="ffp-subhead">1. Retirement Budget</p>
-    <p class="ffp-note">Estimate your monthly income and expenses in retirement to see if you'd have a shortfall to cover from savings.</p>
     <div class="tool-card">
-      <h3>Monthly Income in Retirement</h3>
+      <h3>Mortgage &amp; Home Affordability Calculator</h3>
+      <p>Estimate your monthly house payment (principal, interest, taxes, and insurance) and roughly how much home your income can support.</p>
       <div class="field-row">
-        <div class="field"><label for="rb-pension">Pension &amp; 401(k)</label><input type="number" id="rb-pension" value="3000" min="0"></div>
-        <div class="field"><label for="rb-ss">Social Security</label><input type="number" id="rb-ss" value="0" min="0"></div>
-        <div class="field"><label for="rb-parttime">Part-time work</label><input type="number" id="rb-parttime" value="0" min="0"></div>
-      </div>
-      <h3>Monthly Expenses in Retirement</h3>
-      <div class="field-row">
-        <div class="field"><label for="rb-housing">Housing</label><input type="number" id="rb-housing" value="2000" min="0"></div>
-        <div class="field"><label for="rb-transport">Transportation</label><input type="number" id="rb-transport" value="500" min="0"></div>
-        <div class="field"><label for="rb-healthcare">Healthcare</label><input type="number" id="rb-healthcare" value="500" min="0"></div>
-        <div class="field"><label for="rb-food">Food</label><input type="number" id="rb-food" value="1000" min="0"></div>
+        <div class="field"><label for="mg-price">Home price ($)</label><input type="number" id="mg-price" value="350000" min="0"></div>
+        <div class="field"><label for="mg-down">Down payment ($)</label><input type="number" id="mg-down" value="70000" min="0"></div>
+        <div class="field"><label for="mg-rate">Mortgage rate (%)</label><input type="number" id="mg-rate" value="6.5" min="0" step="0.01"></div>
+        <div class="field"><label for="mg-years">Loan term (years)</label><input type="number" id="mg-years" value="30" min="1"></div>
       </div>
       <div class="field-row">
-        <div class="field"><label for="rb-entertainment">Entertainment &amp; Leisure</label><input type="number" id="rb-entertainment" value="1000" min="0"></div>
-        <div class="field"><label for="rb-clothing">Clothing &amp; Personal</label><input type="number" id="rb-clothing" value="250" min="0"></div>
-        <div class="field"><label for="rb-misc">Miscellaneous</label><input type="number" id="rb-misc" value="250" min="0"></div>
-        <div class="field"><label for="rb-donation">Donation</label><input type="number" id="rb-donation" value="500" min="0"></div>
+        <div class="field"><label for="mg-tax">Annual property tax ($)</label><input type="number" id="mg-tax" value="3500" min="0"></div>
+        <div class="field"><label for="mg-insurance">Annual home insurance ($)</label><input type="number" id="mg-insurance" value="1500" min="0"></div>
+        <div class="field"><label for="mg-income">Your gross monthly income ($)</label><input type="number" id="mg-income" value="8000" min="0"></div>
       </div>
-      <button class="calc-btn" onclick="calcRetirementBudget()">Calculate</button>
-      <div class="result" id="rb-result">
-        <div class="compare-result"><span>Total monthly income</span><span class="value" id="rb-income-total">&mdash;</span></div>
-        <div class="compare-result"><span>Total monthly expenses</span><span class="value" id="rb-expense-total">&mdash;</span></div>
-        <div class="compare-result"><span>Monthly shortfall (withdrawal needed)</span><span class="value" id="rb-shortfall">&mdash;</span></div>
+      <button class="calc-btn" onclick="calcMortgage()">Calculate</button>
+      <div class="result" id="mg-result">
+        <div>Estimated total monthly payment</div>
+        <div class="big" id="mg-total-payment">&mdash;</div>
+        <div class="compare-result"><span>Principal &amp; interest</span><span class="value" id="mg-pi">&mdash;</span></div>
+        <div class="compare-result"><span>Taxes &amp; insurance</span><span class="value" id="mg-ti">&mdash;</span></div>
+        <div class="compare-result"><span>Share of your gross monthly income</span><span class="value" id="mg-pct-income">&mdash;</span></div>
+        <p class="ffp-note" id="mg-affordability-note" style="margin-top:8px;"></p>
       </div>
     </div>
 
-    <p class="ffp-subhead">2. Your Financial Freedom Number</p>
-    <p class="ffp-note">Answer four questions and this calculates the nest egg you'll need, and how much to invest each month to get there.</p>
     <div class="tool-card">
+      <h3>Credit Card &amp; Debt Payoff Calculator</h3>
+      <p>See how long it takes to pay off a balance, and how much interest a fixed payment costs you along the way.</p>
       <div class="field-row">
-        <div class="field"><label for="sp-current-age">Current age</label><input type="number" id="sp-current-age" value="20" min="0"></div>
-        <div class="field"><label for="sp-retire-age">Retirement age</label><input type="number" id="sp-retire-age" value="65" min="0"></div>
-        <div class="field"><label for="sp-life-expectancy">Life expectancy</label><input type="number" id="sp-life-expectancy" value="90" min="0"></div>
-        <div class="field"><label for="sp-legacy">Legacy at life expectancy ($)</label><input type="number" id="sp-legacy" value="500000" min="0"></div>
+        <div class="field"><label for="dc-balance">Current balance ($)</label><input type="number" id="dc-balance" value="5000" min="0"></div>
+        <div class="field"><label for="dc-rate">Annual interest rate (%)</label><input type="number" id="dc-rate" value="22" min="0" step="0.1"></div>
+        <div class="field"><label for="dc-payment">Fixed monthly payment ($)</label><input type="number" id="dc-payment" value="200" min="0"></div>
       </div>
-      <div class="field-row">
-        <div class="field"><label for="sp-monthly-need">Monthly income needed in retirement, today's dollars ($)</label><input type="number" id="sp-monthly-need" value="3000" min="0"></div>
-        <div class="field"><label for="sp-inflation">Annual inflation rate (%)</label><input type="number" id="sp-inflation" value="3.9" min="0" step="0.1"></div>
-      </div>
-      <p class="link-note" id="sp-link-note">Auto-filled from your Retirement Budget shortfall above &mdash; feel free to edit it.</p>
-      <div class="field-row">
-        <div class="field"><label for="sp-retire-return">Return during retirement (%)</label><input type="number" id="sp-retire-return" value="5" min="0" step="0.1"></div>
-        <div class="field"><label for="sp-invest-return">Return while investing (%)</label><input type="number" id="sp-invest-return" value="11.89" min="0" step="0.01"></div>
-        <div class="field"><label for="sp-initial">Amount you already have ($)</label><input type="number" id="sp-initial" value="1000" min="0"></div>
-      </div>
-      <button class="calc-btn" onclick="calcSavingsPlan()">Calculate my number</button>
-      <div class="result" id="sp-result">
-        <div class="compare-result"><span>Monthly income needed at retirement (inflation-adjusted)</span><span class="value" id="sp-need-at-retirement">&mdash;</span></div>
-        <div class="compare-result"><span>Nest egg needed at retirement</span><span class="value" id="sp-target">&mdash;</span></div>
-        <div>Monthly investment needed</div>
-        <div class="big" id="sp-monthly-invest">&mdash;</div>
-      </div>
-      <div class="chart-wrap" id="sp-charts">
-        <h3>Your account balance over your lifetime</h3>
-        <canvas id="lifetime-chart"></canvas>
-        <p class="ffp-note">Growing while you invest, then drawing down as you withdraw in retirement.</p>
+      <button class="calc-btn" onclick="calcDebtPayoff()">Calculate</button>
+      <div class="result" id="dc-result">
+        <div>Time to pay off</div>
+        <div class="big" id="dc-months">&mdash;</div>
+        <div class="compare-result"><span>Total interest paid</span><span class="value" id="dc-interest">&mdash;</span></div>
+        <div class="compare-result"><span>Total amount paid</span><span class="value" id="dc-total">&mdash;</span></div>
+        <p class="ffp-note" id="dc-warning" style="margin-top:8px;"></p>
       </div>
     </div>
 
-    <div class="tool-card" id="cost-of-waiting-card" style="display:none;">
-      <h3>The Cost of Waiting</h3>
-      <p>Same monthly investment, same return &mdash; just starting 20 years apart. This is the difference compound interest makes.</p>
-      <canvas id="cost-of-waiting-chart"></canvas>
-      <div class="chart-summary" id="cow-summary">
-        <div class="compare-result"><span>Starting today</span><span class="value" id="cow-early-final">&mdash;</span></div>
-        <div class="compare-result"><span>Starting 20 years later</span><span class="value" id="cow-late-final">&mdash;</span></div>
-      </div>
-    </div>
-
-    <p class="ffp-subhead">3. Saving Rate vs. Chasing Returns</p>
-    <p class="ffp-note">Person A saves more but earns an ordinary return. Person B saves less but chases a much higher return. Who gets there first?</p>
     <div class="tool-card">
-      <div class="compare-grid">
-        <div class="compare-col">
-          <h4>Person A</h4>
-          <div class="field-row">
-            <div class="field"><label for="sr-a-salary">Annual salary ($)</label><input type="number" id="sr-a-salary" value="80000" min="0"></div>
-            <div class="field"><label for="sr-a-rate">Saving rate (%)</label><input type="number" id="sr-a-rate" value="20" min="0" step="0.1"></div>
-            <div class="field"><label for="sr-a-return">Return (%)</label><input type="number" id="sr-a-return" value="11.89" min="0" step="0.01"></div>
-            <div class="field"><label for="sr-a-goal">Goal ($)</label><input type="number" id="sr-a-goal" value="100000" min="0"></div>
-          </div>
-        </div>
-        <div class="compare-col">
-          <h4>Person B</h4>
-          <div class="field-row">
-            <div class="field"><label for="sr-b-salary">Annual salary ($)</label><input type="number" id="sr-b-salary" value="80000" min="0"></div>
-            <div class="field"><label for="sr-b-rate">Saving rate (%)</label><input type="number" id="sr-b-rate" value="5" min="0" step="0.1"></div>
-            <div class="field"><label for="sr-b-return">Return (%)</label><input type="number" id="sr-b-return" value="20" min="0" step="0.1"></div>
-            <div class="field"><label for="sr-b-goal">Goal ($)</label><input type="number" id="sr-b-goal" value="100000" min="0"></div>
-          </div>
-        </div>
-      </div>
-      <button class="calc-btn" onclick="calcSavingRate()">Compare</button>
-      <div class="result" id="sr-result">
-        <div class="compare-grid">
-          <div class="compare-result"><span>Person A reaches the goal in</span><span class="value" id="sr-a-years">&mdash;</span></div>
-          <div class="compare-result"><span>Person B reaches the goal in</span><span class="value" id="sr-b-years">&mdash;</span></div>
-        </div>
-      </div>
-    </div>
-
-    <p class="ffp-subhead">4. The Power of Compound Interest</p>
-    <p class="ffp-note">Small, consistent amounts invested over a long time &mdash; see how much of the final total is your own money versus growth.</p>
-    <div class="tool-card">
+      <h3>Auto Loan Calculator</h3>
+      <p>Estimate your monthly car payment, including a down payment, trade-in value, and sales tax.</p>
       <div class="field-row">
-        <div class="field">
-          <label for="cp-frequency">Contribution frequency</label>
-          <select id="cp-frequency" class="freq-select">
-            <option value="daily">Daily</option>
-            <option value="monthly" selected>Monthly</option>
-          </select>
-        </div>
-        <div class="field"><label for="cp-amount">Amount per contribution ($)</label><input type="number" id="cp-amount" value="136" min="0"></div>
-        <div class="field"><label for="cp-years">Years</label><input type="number" id="cp-years" value="45" min="0"></div>
-        <div class="field"><label for="cp-rate">Annual rate (%)</label><input type="number" id="cp-rate" value="11.89" min="0" step="0.01"></div>
-        <div class="field"><label for="cp-initial">Starting amount ($)</label><input type="number" id="cp-initial" value="1000" min="0"></div>
+        <div class="field"><label for="al-price">Vehicle price ($)</label><input type="number" id="al-price" value="30000" min="0"></div>
+        <div class="field"><label for="al-down">Down payment ($)</label><input type="number" id="al-down" value="3000" min="0"></div>
+        <div class="field"><label for="al-tradein">Trade-in value ($)</label><input type="number" id="al-tradein" value="0" min="0"></div>
+        <div class="field"><label for="al-tax">Sales tax (%)</label><input type="number" id="al-tax" value="6" min="0" step="0.1"></div>
       </div>
-      <button class="calc-btn" onclick="calcCompoundPower()">Calculate</button>
-      <div class="result" id="cp-result">
-        <div>Future value</div>
-        <div class="big" id="cp-future-value">&mdash;</div>
-        <div class="compare-result"><span>Amount you actually invested</span><span class="value" id="cp-principal">&mdash;</span></div>
-        <div class="compare-result"><span>Growth from compound interest</span><span class="value" id="cp-interest">&mdash;</span></div>
-        <p class="ffp-note" id="cp-pct-note" style="margin-top:8px;"></p>
-      </div>
-    </div>
-
-    <p class="ffp-subhead">5. Saving on Eating Out</p>
-    <p class="ffp-note">Skip a little takeout each week, invest it instead, and let it compound.</p>
-    <div class="tool-card">
       <div class="field-row">
-        <div class="field"><label for="eo-weekly">Weekly amount saved ($)</label><input type="number" id="eo-weekly" value="25" min="0"></div>
-        <div class="field"><label for="eo-return">Annual return (%)</label><input type="number" id="eo-return" value="11.89" min="0" step="0.01"></div>
-        <div class="field"><label for="eo-inflation">Annual inflation (%)</label><input type="number" id="eo-inflation" value="3.9" min="0" step="0.1"></div>
-        <div class="field"><label for="eo-years">Number of years</label><input type="number" id="eo-years" value="35" min="0"></div>
+        <div class="field"><label for="al-rate">Loan APR (%)</label><input type="number" id="al-rate" value="7.5" min="0" step="0.01"></div>
+        <div class="field"><label for="al-years">Loan term (years)</label><input type="number" id="al-years" value="5" min="1"></div>
       </div>
-      <button class="calc-btn" onclick="calcEatingOut()">Calculate</button>
-      <div class="result" id="eo-result">
-        <div>Future value</div>
-        <div class="big" id="eo-future-value">&mdash;</div>
-        <div class="compare-result"><span>Amount you actually set aside</span><span class="value" id="eo-total-saved">&mdash;</span></div>
+      <button class="calc-btn" onclick="calcAutoLoan()">Calculate</button>
+      <div class="result" id="al-result">
+        <div>Monthly payment</div>
+        <div class="big" id="al-payment">&mdash;</div>
+        <div class="compare-result"><span>Amount financed</span><span class="value" id="al-financed">&mdash;</span></div>
+        <div class="compare-result"><span>Total interest over the loan</span><span class="value" id="al-interest">&mdash;</span></div>
       </div>
-    </div>
-
-    <p class="ffp-subhead">6. Track Your Income &amp; Expenses</p>
-    <div class="tool-card">
-      <p>Before you can build a realistic budget, you need to know where your money actually goes. Record every dollar of income and every expense, every day, for about six months. At the end, total each category &mdash; you'll likely be surprised by at least one of them &mdash; then build a budget around what you find, and stick to it.</p>
-      <a class="ffp-download" href="assets/income-expense-template.csv" download>Download a blank tracking template (.csv)</a>
     </div>
 
   </div>
@@ -247,12 +154,11 @@
 
 <footer class="site">
   <div class="wrap">
-    &copy; 2026 Borhan Sayedy. Kennesaw State University.
+    &copy; 2026 Borhan Sayedy.
   </div>
 </footer>
 
 <script src="script.js"></script>
 <script src="finance.js"></script>
-<script src="ffp.js"></script>
 </body>
 </html>
