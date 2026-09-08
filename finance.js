@@ -104,7 +104,9 @@ function drawLineChart(canvasId, series, opts) {
     ctx.moveTo(padding.left, yPix);
     ctx.lineTo(cssWidth - padding.right, yPix);
     ctx.stroke();
-    const label = yVal >= 1000 ? '$' + Math.round(yVal / 1000) + 'k' : '$' + Math.round(yVal);
+    const label = yVal >= 1000000 ? '$' + (yVal / 1000000).toFixed(yVal >= 10000000 ? 0 : 1) + 'M'
+      : yVal >= 1000 ? '$' + Math.round(yVal / 1000) + 'k'
+      : '$' + Math.round(yVal);
     ctx.fillText(label, padding.left - 8, yPix);
   }
 

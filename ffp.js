@@ -84,14 +84,8 @@ function drawLifetimeChart(currentAge, retireAge, lifeExpectancy, initial, month
 }
 
 function drawCostOfWaitingChart(currentAge, retireAge, initial, monthlyContribution, investReturn) {
-  const fullYears = retireAge - currentAge;
-  const delayedYears = fullYears - 20;
-
-  if (delayedYears <= 0) {
-    document.getElementById('cost-of-waiting-card').style.display = 'none';
-    return;
-  }
-  document.getElementById('cost-of-waiting-card').style.display = '';
+  const YEARS_LONG = 45;
+  const YEARS_SHORT = 25;
 
   function buildSeries(years, label, color) {
     const pts = [{ x: 0, y: initial }];
@@ -103,9 +97,10 @@ function drawCostOfWaitingChart(currentAge, retireAge, initial, monthlyContribut
     return { label, color, points: pts, final: balance };
   }
 
-  const early = buildSeries(fullYears, `Start at age ${currentAge} (${fullYears} yrs)`, '#3F5D4F');
-  const late = buildSeries(delayedYears, `Start at age ${currentAge + 20} (${delayedYears} yrs)`, '#C98A4B');
+  const early = buildSeries(YEARS_LONG, `Investing for ${YEARS_LONG} years`, '#3F5D4F');
+  const late = buildSeries(YEARS_SHORT, `Investing for ${YEARS_SHORT} years`, '#C98A4B');
 
+  document.getElementById('cost-of-waiting-card').style.display = '';
   drawLineChart('cost-of-waiting-chart', [early, late], { minYZero: true, height: 300 });
 
   document.getElementById('cow-early-final').textContent = fmtUSD(early.final);
@@ -171,10 +166,21 @@ function calcEatingOut() {
   const inflationRate = g('eo-inflation') / 100;
   const years = g('eo-years');
 
-  const futureValue = growingAnnuityFV(weekly, returnRate / 52, inflationRate / 52, years * 52);
-  const totalSaved = weekly * 52 * years;
+  const periods = years * 52;
+  const ratePerPeriod = returnRate / 52;
+  const growthPerPeriod = inflationRate / 52;
+
+  const futureValue = growingAnnuityFV(weekly, ratePerPeriod, growthPerPeriod, periods);
+
+  const totalSaved = Math.abs(growthPerPeriod) < 1e-9
+    ? weekly * periods
+    : weekly * (Math.pow(1 + growthPerPeriod, periods) - 1) / growthPerPeriod;
+
+  const finalWeeklyAmount = weekly * Math.pow(1 + growthPerPeriod, periods - 1);
 
   document.getElementById('eo-future-value').textContent = fmtUSD(futureValue);
   document.getElementById('eo-total-saved').textContent = fmtUSD(totalSaved);
+  document.getElementById('eo-total-saved-note').textContent =
+    `Assumes your weekly amount grows with inflation each year, from ${fmtUSD(weekly)}/week today to about ${fmtUSD(finalWeeklyAmount)}/week by year ${years}.`;
   document.getElementById('eo-result').classList.add('show');
 }
