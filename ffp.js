@@ -57,11 +57,11 @@ function calcSavingsPlan() {
   document.getElementById('sp-monthly-invest').textContent = fmtUSD(monthlyInvestNeeded, 2) + ' / month';
   document.getElementById('sp-result').classList.add('show');
 
+  document.getElementById('sp-charts').classList.add('show');
+
   drawLifetimeChart(currentAge, retireAge, lifeExpectancy, initial, monthlyInvestNeeded,
     investReturn, retireReturn, monthlyNeedAtRetirement, legacy);
   drawCostOfWaitingChart(currentAge, retireAge, initial, monthlyInvestNeeded, investReturn);
-
-  document.getElementById('sp-charts').classList.add('show');
 }
 
 function drawLifetimeChart(currentAge, retireAge, lifeExpectancy, initial, monthlyContribution,
@@ -106,7 +106,7 @@ function drawCostOfWaitingChart(currentAge, retireAge, initial, monthlyContribut
   const early = buildSeries(fullYears, `Start at age ${currentAge} (${fullYears} yrs)`, '#3F5D4F');
   const late = buildSeries(delayedYears, `Start at age ${currentAge + 20} (${delayedYears} yrs)`, '#C98A4B');
 
-  drawLineChart('cost-of-waiting-chart', [early, late], { minYZero: true, height: 260 });
+  drawLineChart('cost-of-waiting-chart', [early, late], { minYZero: true, height: 300 });
 
   document.getElementById('cow-early-final').textContent = fmtUSD(early.final);
   document.getElementById('cow-late-final').textContent = fmtUSD(late.final);

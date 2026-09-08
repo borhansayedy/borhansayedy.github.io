@@ -7,7 +7,7 @@
   --accent: #3F5D4F;
   --accent-warm: #C98A4B;
   --line: #DDD3C4;
-  --max: 700px;
+  --max: 1040px;
 }
 
 * { box-sizing: border-box; }
@@ -107,6 +107,10 @@ nav.links a[aria-current="page"] {
 nav.links a:hover { color: var(--accent); }
 
 main { padding: 56px 0 80px; }
+
+.wrap > p {
+  max-width: 720px;
+}
 
 footer.site {
   border-top: 1px solid var(--line);
@@ -379,7 +383,7 @@ select.freq-select {
   display: none;
 }
 .chart-wrap.show { display: block; }
-.chart-wrap canvas {
+.tool-card canvas {
   width: 100%;
   display: block;
 }

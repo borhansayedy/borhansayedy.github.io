@@ -1,17 +1,25 @@
-Date,Category,Item,Income,Expense,Balance
-,Beginning balance,,,,
-,,,,,
-,,,,,
-,,,,,
-,,,,,
-,,,,,
-,,,,,
-,,,,,
-,,,,,
-,,,,,
-
-Instructions:
-1. Every day for about 6 months, record every dollar that comes in (Income) or goes out (Expense).
-2. Use the Category column for broad groups (Housing, Food, Transportation, Eating Out, Entertainment, Donation, Saving/Investing, etc.) and Item for the specific thing (e.g. "Coffee," "Rent").
-3. Update Balance after each entry so you can see your running total.
-4. After 6 months, total each Category to see where your money actually goes -- then build a budget around what you find, and try to stick to it.
+﻿Date,Category,Item,Bank A Debit,Bank A Credit,Bank A Balance,Bank B Debit,Bank B Credit,Bank B Balance,Cash Debit,Cash Credit,Cash Balance
+11/01/2025,Beginning balance,Balance,,,500,,,500,,,100
+11/01/2025,Salary,From work X,,400,900,,,500,,,100
+11/01/2025,Salary,From work Y,,,900,,500,1000,,,100
+11/01/2025,Saving/Investing,Monthly Investment,,,900,136,,864,,,100
+11/01/2025,Transportation,Gas,25,,875,,,864,,,100
+11/01/2025,Housing,rent,500,,375,,,864,,,100
+11/02/2025,Donation,Atlanta mission,,,375,,,864,5,,95
+11/02/2025,Groceries,Costco,,,375,86,,778,,,95
+11/05/2025,Eating out,Coffee,8,,367,,,778,,,95
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
