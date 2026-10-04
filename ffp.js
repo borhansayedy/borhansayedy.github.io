@@ -84,27 +84,46 @@ function drawLifetimeChart(currentAge, retireAge, lifeExpectancy, initial, month
 }
 
 function drawCostOfWaitingChart(currentAge, retireAge, initial, monthlyContribution, investReturn) {
-  const YEARS_LONG = 45;
-  const YEARS_SHORT = 25;
+  // Both people invest the same amount each month and stop at the same
+  // retirement age. The only difference is when they started.
+  const horizon = retireAge - currentAge;
+  const delay = Math.min(20, Math.max(1, Math.floor(horizon / 2)));
+  const lateStartAge = currentAge + delay;
 
-  function buildSeries(years, label, color) {
-    const pts = [{ x: 0, y: initial }];
+  function buildSeries(startAge, color, width) {
+    const pts = [{ x: startAge, y: initial }];
     let balance = initial;
-    for (let y = 1; y <= years; y++) {
+    for (let age = startAge + 1; age <= retireAge; age++) {
       balance = fv(investReturn / 12, 12, -monthlyContribution, -balance);
-      pts.push({ x: y, y: Math.max(balance, 0) });
+      pts.push({ x: age, y: Math.max(balance, 0) });
     }
-    return { label, color, points: pts, final: balance };
+    return { label: `Start at ${startAge}`, color, width, points: pts, final: balance };
   }
 
-  const early = buildSeries(YEARS_LONG, `Investing for ${YEARS_LONG} years`, '#3F5D4F');
-  const late = buildSeries(YEARS_SHORT, `Investing for ${YEARS_SHORT} years`, '#C98A4B');
+  const early = buildSeries(currentAge, '#D9752B', 4);
+  const late = buildSeries(lateStartAge, '#9B9690', 3);
+
+  // the late starter's line should begin at the baseline, not float in
+  late.points.unshift({ x: lateStartAge, y: 0 });
 
   document.getElementById('cost-of-waiting-card').style.display = '';
-  drawLineChart('cost-of-waiting-chart', [early, late], { minYZero: true, height: 300 });
+  const placeholder = document.getElementById('cow-placeholder');
+  if (placeholder) placeholder.style.display = 'none';
 
+  drawStartingAgeChart('cost-of-waiting-chart', {
+    title: 'Portfolio value by starting age',
+    subtitle: `${fmtUSD(initial)} start + ${fmtUSD(monthlyContribution)}/month at ${(investReturn * 100).toFixed(2)}%, by age`,
+    height: 360,
+    series: [early, late]
+  });
+
+  document.getElementById('cow-early-label').textContent =
+    `Starting at ${currentAge}, invested for ${retireAge - currentAge} years`;
+  document.getElementById('cow-late-label').textContent =
+    `Starting at ${lateStartAge}, invested for ${retireAge - lateStartAge} years`;
   document.getElementById('cow-early-final').textContent = fmtUSD(early.final);
   document.getElementById('cow-late-final').textContent = fmtUSD(late.final);
+  document.getElementById('cow-gap').textContent = fmtUSD(early.final - late.final);
   document.getElementById('cow-summary').classList.add('show');
 }
 
@@ -129,35 +148,7 @@ function calcSavingRate() {
 }
 
 /* ============================================================
-   4. Power of Compound Interest
-   ============================================================ */
-function calcCompoundPower() {
-  const g = id => parseFloat(document.getElementById(id).value) || 0;
-  const frequency = document.getElementById('cp-frequency').value;
-  const amount = g('cp-amount');
-  const years = g('cp-years');
-  const rate = g('cp-rate') / 100;
-  const initial = g('cp-initial');
-
-  const periodsPerYear = frequency === 'daily' ? 365 : 12;
-  const periods = years * periodsPerYear;
-  const ratePerPeriod = rate / periodsPerYear;
-
-  const futureValue = fv(ratePerPeriod, periods, -amount, -initial);
-  const principal = amount * periods + initial;
-  const interest = futureValue - principal;
-
-  document.getElementById('cp-future-value').textContent = fmtUSD(futureValue);
-  document.getElementById('cp-principal').textContent = fmtUSD(principal);
-  document.getElementById('cp-interest').textContent = fmtUSD(interest);
-  const pct = futureValue > 0 ? Math.round((interest / futureValue) * 100) : 0;
-  document.getElementById('cp-pct-note').textContent =
-    `${pct}% of the final balance came from growth, not from money you put in.`;
-  document.getElementById('cp-result').classList.add('show');
-}
-
-/* ============================================================
-   5. Saving on Eating Out (growing annuity)
+   4. Saving on Eating Out (growing annuity)
    ============================================================ */
 function calcEatingOut() {
   const g = id => parseFloat(document.getElementById(id).value) || 0;

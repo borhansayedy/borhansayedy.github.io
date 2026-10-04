@@ -54,6 +54,167 @@ function fmtUSD(n, decimals) {
 }
 
 /* ============================================================
+   Starting-age comparison chart — the "cost of waiting" picture.
+   Two lines plotted against age, labelled at the end of each
+   line rather than with a legend, so the comparison reads at a
+   glance. opts = { title, subtitle, height, series: [
+     { label, color, width, points: [{x, y}, ...] } ] }
+   ============================================================ */
+function drawStartingAgeChart(canvasId, opts) {
+  opts = opts || {};
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const series = opts.series || [];
+  if (!series.length) return;
+
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.clientWidth || canvas.parentElement.clientWidth;
+  const cssHeight = opts.height || 340;
+  canvas.width = cssWidth * dpr;
+  canvas.height = cssHeight * dpr;
+  canvas.style.width = cssWidth + 'px';
+  canvas.style.height = cssHeight + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  const narrow = cssWidth < 560;
+  const padding = {
+    top: 70,
+    right: narrow ? 86 : 128,
+    bottom: 38,
+    left: narrow ? 52 : 64
+  };
+  const plotW = cssWidth - padding.left - padding.right;
+  const plotH = cssHeight - padding.top - padding.bottom;
+
+  const styles = getComputedStyle(document.documentElement);
+  const ink = styles.getPropertyValue('--ink').trim() || '#2b2a28';
+  const inkSoft = styles.getPropertyValue('--ink-soft').trim() || '#5b564c';
+  const gridColor = styles.getPropertyValue('--line').trim() || '#ddd3c4';
+
+  let allX = [], allY = [0];
+  series.forEach(s => s.points.forEach(p => { allX.push(p.x); allY.push(p.y); }));
+  const minX = Math.min(...allX), maxX = Math.max(...allX);
+  const dataMax = Math.max(...allY);
+
+  // pick a round gridline step that lands on 3 to 5 intervals
+  function niceStep(max) {
+    if (max <= 0) return 1;
+    const start = Math.floor(Math.log10(max)) - 2;
+    for (let k = start; k <= start + 4; k++) {
+      const mag = Math.pow(10, k);
+      for (const mult of [1, 2, 2.5, 5]) {
+        const s = mult * mag;
+        const ticks = Math.ceil(max / s);
+        if (ticks >= 2 && ticks <= 5) return s;
+      }
+    }
+    return max / 4;
+  }
+  const step = niceStep(dataMax);
+  const yMax = Math.max(Math.ceil(dataMax / step) * step, step);
+  const tickCount = Math.round(yMax / step);
+
+  const xScale = x => padding.left + ((x - minX) / (maxX - minX || 1)) * plotW;
+  const yScale = y => padding.top + plotH - (y / (yMax || 1)) * plotH;
+
+  function axisMoney(v) {
+    if (yMax >= 1000000) {
+      const m = v / 1000000;
+      return '$' + (step % 1000000 === 0 ? m.toFixed(0) : m.toFixed(1)) + 'M';
+    }
+    if (yMax >= 1000) return '$' + Math.round(v / 1000) + 'k';
+    return '$' + Math.round(v);
+  }
+  function endMoney(v) {
+    if (v >= 1000000) return '$' + (v / 1000000).toFixed(1) + 'M';
+    if (v >= 1000) return '$' + Math.round(v / 1000) + 'K';
+    return '$' + Math.round(v);
+  }
+
+  // title and subtitle
+  if (opts.title) {
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = ink;
+    ctx.font = '700 ' + (narrow ? 15 : 17) + 'px "Source Sans 3", sans-serif';
+    ctx.fillText(opts.title, 4, 24);
+  }
+  if (opts.subtitle) {
+    ctx.fillStyle = inkSoft;
+    ctx.font = (narrow ? 12 : 13.5) + 'px "Source Sans 3", sans-serif';
+    ctx.fillText(opts.subtitle, 4, 44);
+  }
+
+  // gridlines and y labels
+  ctx.strokeStyle = gridColor;
+  ctx.lineWidth = 1;
+  ctx.font = (narrow ? 12 : 14) + 'px "Source Sans 3", sans-serif';
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i <= tickCount; i++) {
+    const yVal = (yMax / tickCount) * i;
+    const yPix = yScale(yVal);
+    ctx.beginPath();
+    ctx.moveTo(padding.left, yPix);
+    ctx.lineTo(padding.left + plotW, yPix);
+    ctx.stroke();
+    ctx.fillStyle = inkSoft;
+    ctx.fillText(axisMoney(yVal), padding.left - 10, yPix);
+  }
+
+  // x labels, every 10 years where that fits, otherwise every 5
+  const xStep = (maxX - minX) >= 30 ? 10 : 5;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = inkSoft;
+  const firstTick = Math.ceil(minX / xStep) * xStep;
+  for (let xv = firstTick; xv <= maxX; xv += xStep) {
+    ctx.fillText(String(xv), xScale(xv), padding.top + plotH + 10);
+  }
+
+  // lines
+  series.forEach(s => {
+    if (!s.points.length) return;
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = s.width || 3.5;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    s.points.forEach((p, i) => {
+      const px = xScale(p.x), py = yScale(Math.min(p.y, yMax));
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+  });
+
+  // end-of-line value and label, in place of a legend
+  series.forEach(s => {
+    if (!s.points.length) return;
+    const last = s.points[s.points.length - 1];
+    const px = xScale(last.x);
+    const py = yScale(Math.min(last.y, yMax));
+
+    ctx.fillStyle = s.color;
+    ctx.beginPath();
+    ctx.arc(px, py, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    const labelX = Math.min(px + 12, cssWidth - padding.right + 10);
+    let labelY = Math.max(py, padding.top + 14);
+    labelY = Math.min(labelY, padding.top + plotH - 18);
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.font = '700 ' + (narrow ? 14 : 17) + 'px "Source Sans 3", sans-serif';
+    ctx.fillText(endMoney(last.y), labelX, labelY);
+    ctx.font = '600 ' + (narrow ? 12 : 15) + 'px "Source Sans 3", sans-serif';
+    ctx.fillText(s.label, labelX, labelY + (narrow ? 16 : 21));
+  });
+}
+
+/* ============================================================
    Minimal canvas line chart — no external dependencies.
    series: [{ label, color, points: [{x, y}, ...] }]
    ============================================================ */

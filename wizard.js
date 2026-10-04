@@ -32,7 +32,8 @@ const wizardSteps = [
   },
   {
     key: 'monthlyNeed',
-    prompt: "Roughly how much would you like to have available each month in retirement, in today's dollars? Think about housing, food, healthcare, and the life you want to live.",
+    prompt: "How much will you need to pull out of your own savings each month in retirement, in today's dollars?" +
+      '<span class="wizard-hint">Careful here: this is <strong>not</strong> your total cost of living. It is the gap left over after the income you will already be receiving. Add up what you expect to spend each month, subtract what will come in from a pension, 401(k), Social Security, or part-time work, and enter the difference. If you expect to spend $6,000 a month and $3,000 of that is already covered, the number to enter is $3,000. That shortfall is what your investments have to pay for.</span>',
     suggestions: [2000, 3000, 5000],
     unit: '$/month'
   },
@@ -44,13 +45,15 @@ const wizardSteps = [
   },
   {
     key: 'retireReturn',
-    prompt: 'What return would you expect on your investments once you retire? People usually invest more conservatively at this stage, so a lower number than your working years is typical.',
+    prompt: 'Once you retire, what return do you expect on the money still invested, <strong>after</strong> inflation?' +
+      '<span class="wizard-hint">This one has to be inflation-adjusted, because the monthly amount you just gave me is in today\u2019s dollars and needs to keep its buying power for the rest of your life. So enter the return <em>above</em> inflation, not the headline number. Most people shift toward bonds as retirement gets closer, and a mix of stocks and bonds has historically returned somewhere around 5% a year once inflation is taken out, which makes 5% a sensible starting point.</span>',
     suggestions: [4, 5, 6],
     unit: '%'
   },
   {
     key: 'investReturn',
-    prompt: 'And what return do you expect while you\u2019re actively investing before retirement?',
+    prompt: 'And while you\u2019re still working and investing, what return do you expect <strong>before</strong> inflation?' +
+      '<span class="wizard-hint">This one is the opposite: do not adjust it. Enter the plain return you would see on a statement. Inflation is already handled separately, because the calculator takes the monthly amount you gave me in today\u2019s dollars and grows it to what that same life will actually cost in the year you retire. Adjusting here too would subtract inflation twice. For reference, the S&amp;P 500 has averaged about 11.89% a year over roughly the past 50 years before adjusting for inflation.</span>',
     suggestions: [8, 10, 11.89],
     unit: '%'
   },
@@ -195,8 +198,9 @@ function finishWizard() {
   const monthlyInvestNeeded = -pmt(investReturn / 12, yearsToRetirement * 12, -a.initial, target);
 
   const summary = `
-    Here's what I've got: to have <strong>${fmtUSD(monthlyNeedAtRetirement)}/month</strong> available when you retire at ${a.retireAge}
-    (adjusted for inflation), you'll want a nest egg of about <strong>${fmtUSD(target)}</strong> by then.
+    Here's what I've got: the ${fmtUSD(a.monthlyNeed)}/month shortfall you gave me in today's dollars works out to
+    <strong>${fmtUSD(monthlyNeedAtRetirement)}/month</strong> by the time you retire at ${a.retireAge}, once inflation has done its work.
+    To cover that for the rest of your life, you'll want a nest egg of about <strong>${fmtUSD(target)}</strong> by then.
     <br><br>
     Starting from ${fmtUSD(a.initial)} today, investing at ${a.investReturn}% a year for ${yearsToRetirement} years,
     that means investing about <strong>${fmtUSD(monthlyInvestNeeded, 2)}/month</strong> to get there.

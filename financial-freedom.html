@@ -29,7 +29,7 @@
     <h1>Financial Freedom Planning</h1>
     <p>The goal of these tools is simple: the earlier you start saving and investing, the more compound interest does the work for you. Try plugging in your own numbers, the gap between starting today and starting in ten years is usually the most convincing argument there is.</p>
 
-    <h2 class="ffp-intro">Part 1: Find Your Number</h2>
+    <h2 class="ffp-intro">Part 1: Find Your Monthly Investment Target</h2>
     <p>These two calculators work together to answer one question: how much do you need to invest each month to reach financial freedom?</p>
 
     <div class="wizard-toggle-row">
@@ -38,7 +38,7 @@
     </div>
 
     <div id="form-mode">
-      <p class="ffp-subhead">1. Retirement Budget</p>
+      <p class="ffp-subhead">Step 1. Retirement Budget</p>
       <p class="ffp-note">Estimate your monthly income and expenses in retirement to see if you'd have a shortfall to cover from savings.</p>
       <div class="tool-card">
         <h3>Monthly Income in Retirement</h3>
@@ -68,7 +68,7 @@
         </div>
       </div>
 
-      <p class="ffp-subhead">2. Your Financial Freedom Number</p>
+      <p class="ffp-subhead">Step 2. Your Financial Freedom Number</p>
       <p class="ffp-note">Answer four questions and this calculates the nest egg you'll need, and how much to invest each month to get there.</p>
       <div class="tool-card">
         <div class="field-row">
@@ -78,18 +78,20 @@
           <div class="field"><label for="sp-legacy">Legacy at life expectancy ($)</label><input type="number" id="sp-legacy" value="500000" min="0"></div>
         </div>
         <div class="field-row">
-          <div class="field"><label for="sp-monthly-need">Monthly income needed in retirement, today's dollars ($)</label><input type="number" id="sp-monthly-need" value="3000" min="0"></div>
+          <div class="field"><label for="sp-monthly-need">Monthly shortfall to cover from savings, today's dollars ($)</label><input type="number" id="sp-monthly-need" value="3000" min="0"></div>
           <div class="field"><label for="sp-inflation">Annual inflation rate (%)</label><input type="number" id="sp-inflation" value="3.9" min="0" step="0.1"></div>
         </div>
+        <p class="ffp-note">This is the gap, not your whole cost of living: monthly expenses minus the income you'll already have from a pension, 401(k), Social Security, or part-time work.</p>
         <p class="link-note" id="sp-link-note">Auto-filled from your Retirement Budget shortfall above. Feel free to edit it.</p>
         <div class="field-row">
-          <div class="field"><label for="sp-retire-return">Return during retirement (%)</label><input type="number" id="sp-retire-return" value="5" min="0" step="0.1"></div>
-          <div class="field"><label for="sp-invest-return">Return while investing (%)</label><input type="number" id="sp-invest-return" value="11.89" min="0" step="0.01"></div>
+          <div class="field"><label for="sp-retire-return">Return during retirement, after inflation (%)</label><input type="number" id="sp-retire-return" value="5" min="0" step="0.1"></div>
+          <div class="field"><label for="sp-invest-return">Return while investing, before inflation (%)</label><input type="number" id="sp-invest-return" value="11.89" min="0" step="0.01"></div>
           <div class="field"><label for="sp-initial">Amount you already have ($)</label><input type="number" id="sp-initial" value="1000" min="0"></div>
         </div>
+        <p class="ffp-note">Two different kinds of return, on purpose. During retirement, enter the return <strong>after</strong> inflation, since the withdrawal stays constant in today's buying power; around 5% is a reasonable figure for a mix of stocks and bonds. While you're still working, enter the ordinary return <strong>before</strong> inflation, because the calculator already inflates your retirement costs separately; the S&amp;P 500 has averaged about 11.89% a year over roughly the past 50 years.</p>
         <button class="calc-btn" onclick="calcSavingsPlan()">Calculate my number</button>
         <div class="result" id="sp-result">
-          <div class="compare-result"><span>Monthly income needed at retirement (inflation-adjusted)</span><span class="value" id="sp-need-at-retirement">&mdash;</span></div>
+          <div class="compare-result"><span>Monthly shortfall at retirement (inflation-adjusted)</span><span class="value" id="sp-need-at-retirement">&mdash;</span></div>
           <div class="compare-result"><span>Nest egg needed at retirement</span><span class="value" id="sp-target">&mdash;</span></div>
           <div>Monthly investment needed</div>
           <div class="big" id="sp-monthly-invest">&mdash;</div>
@@ -108,21 +110,42 @@
       <button class="wizard-restart" onclick="restartWizard()">Start over</button>
     </div>
 
+    <h2 class="ffp-intro">Part 2: The Cost of Waiting</h2>
+    <p>Two people invest the same amount every month, at the same return, and stop at the same retirement age. The only difference is when they started. This is the single most convincing chart in the whole workshop.</p>
+
+    <p class="ffp-note" id="cow-placeholder">Run the calculator in Part 1 and your own numbers will appear here.</p>
+
     <div class="tool-card" id="cost-of-waiting-card" style="display:none;">
-      <h3>The Cost of Waiting</h3>
-      <p>Same monthly investment, same return, the only difference is 45 years of investing versus 25. This is what compound interest does with those extra 20 years.</p>
       <canvas id="cost-of-waiting-chart"></canvas>
       <div class="chart-summary" id="cow-summary">
-        <div class="compare-result"><span>Investing for 45 years</span><span class="value" id="cow-early-final">&mdash;</span></div>
-        <div class="compare-result"><span>Investing for 25 years</span><span class="value" id="cow-late-final">&mdash;</span></div>
+        <div class="compare-result"><span id="cow-early-label">Starting earlier</span><span class="value" id="cow-early-final">&mdash;</span></div>
+        <div class="compare-result"><span id="cow-late-label">Starting later</span><span class="value" id="cow-late-final">&mdash;</span></div>
+        <div class="compare-result"><span>What the delay costs</span><span class="value" id="cow-gap">&mdash;</span></div>
       </div>
     </div>
 
-    <h2 class="ffp-intro">Part 2: Why Starting Early Matters</h2>
-    <p>Once you know your number, these show why time and consistency, more than finding a hot return, are what actually get you there.</p>
+    <h2 class="ffp-intro">Part 3: Saving on Eating Out</h2>
+    <p>Small habits are easier to change than big ones, and over a working life they add up to more than most people expect. Skip a little takeout each week, invest it instead, and let it compound.</p>
 
-    <p class="ffp-subhead">3. Saving Rate vs. Chasing Returns</p>
-    <p class="ffp-note">Person A saves more but earns an ordinary return. Person B saves less but chases a much higher return. Who gets there first?</p>
+    <div class="tool-card">
+      <div class="field-row">
+        <div class="field"><label for="eo-weekly">Weekly amount saved ($)</label><input type="number" id="eo-weekly" value="25" min="0"></div>
+        <div class="field"><label for="eo-return">Annual return (%)</label><input type="number" id="eo-return" value="11.89" min="0" step="0.01"></div>
+        <div class="field"><label for="eo-inflation">Annual inflation (%)</label><input type="number" id="eo-inflation" value="3.9" min="0" step="0.1"></div>
+        <div class="field"><label for="eo-years">Number of years</label><input type="number" id="eo-years" value="35" min="0"></div>
+      </div>
+      <button class="calc-btn" onclick="calcEatingOut()">Calculate</button>
+      <div class="result" id="eo-result">
+        <div>Future value</div>
+        <div class="big" id="eo-future-value">&mdash;</div>
+        <div class="compare-result"><span>Amount you actually set aside</span><span class="value" id="eo-total-saved">&mdash;</span></div>
+        <p class="ffp-note" id="eo-total-saved-note" style="margin-top:8px;"></p>
+      </div>
+    </div>
+
+    <h2 class="ffp-intro">Part 4: Saving Rate vs. Chasing Returns</h2>
+    <p>Person A saves more but earns an ordinary return. Person B saves less but chases a much higher return. Who gets there first? How much you put in is the part you control.</p>
+
     <div class="tool-card">
       <div class="compare-grid">
         <div class="compare-col">
@@ -153,51 +176,7 @@
       </div>
     </div>
 
-    <p class="ffp-subhead">4. The Power of Compound Interest</p>
-    <p class="ffp-note">Small, consistent amounts invested over a long time, see how much of the final total is your own money versus growth.</p>
-    <div class="tool-card">
-      <div class="field-row">
-        <div class="field">
-          <label for="cp-frequency">Contribution frequency</label>
-          <select id="cp-frequency" class="freq-select">
-            <option value="daily">Daily</option>
-            <option value="monthly" selected>Monthly</option>
-          </select>
-        </div>
-        <div class="field"><label for="cp-amount">Amount per contribution ($)</label><input type="number" id="cp-amount" value="136" min="0"></div>
-        <div class="field"><label for="cp-years">Years</label><input type="number" id="cp-years" value="45" min="0"></div>
-        <div class="field"><label for="cp-rate">Annual rate (%)</label><input type="number" id="cp-rate" value="11.89" min="0" step="0.01"></div>
-        <div class="field"><label for="cp-initial">Starting amount ($)</label><input type="number" id="cp-initial" value="1000" min="0"></div>
-      </div>
-      <button class="calc-btn" onclick="calcCompoundPower()">Calculate</button>
-      <div class="result" id="cp-result">
-        <div>Future value</div>
-        <div class="big" id="cp-future-value">&mdash;</div>
-        <div class="compare-result"><span>Amount you actually invested</span><span class="value" id="cp-principal">&mdash;</span></div>
-        <div class="compare-result"><span>Growth from compound interest</span><span class="value" id="cp-interest">&mdash;</span></div>
-        <p class="ffp-note" id="cp-pct-note" style="margin-top:8px;"></p>
-      </div>
-    </div>
-
-    <p class="ffp-subhead">5. Saving on Eating Out</p>
-    <p class="ffp-note">Skip a little takeout each week, invest it instead, and let it compound.</p>
-    <div class="tool-card">
-      <div class="field-row">
-        <div class="field"><label for="eo-weekly">Weekly amount saved ($)</label><input type="number" id="eo-weekly" value="25" min="0"></div>
-        <div class="field"><label for="eo-return">Annual return (%)</label><input type="number" id="eo-return" value="11.89" min="0" step="0.01"></div>
-        <div class="field"><label for="eo-inflation">Annual inflation (%)</label><input type="number" id="eo-inflation" value="3.9" min="0" step="0.1"></div>
-        <div class="field"><label for="eo-years">Number of years</label><input type="number" id="eo-years" value="35" min="0"></div>
-      </div>
-      <button class="calc-btn" onclick="calcEatingOut()">Calculate</button>
-      <div class="result" id="eo-result">
-        <div>Future value</div>
-        <div class="big" id="eo-future-value">&mdash;</div>
-        <div class="compare-result"><span>Amount you actually set aside</span><span class="value" id="eo-total-saved">&mdash;</span></div>
-        <p class="ffp-note" id="eo-total-saved-note" style="margin-top:8px;"></p>
-      </div>
-    </div>
-
-    <p class="ffp-subhead">6. Track Your Income &amp; Expenses</p>
+    <h2 class="ffp-intro">Part 5: Track Your Income &amp; Expenses</h2>
     <div class="tool-card">
       <p>Before you can build a realistic budget, you need to know where your money actually goes. Record every dollar of income and every expense, every day, for about six months. At the end, total each category (you'll likely be surprised by at least one of them), then build a budget around what you find, and stick to it.</p>
       <a href="income-expense-template.xlsx" download>Download a blank tracking template (.xlsx)</a>
